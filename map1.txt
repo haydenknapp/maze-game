@@ -1,0 +1,13 @@
+16 12
+c d c c c c c c c c c c c c c c
+c b b b b b c c c c c c c c c c
+c c c c c b c c c c c c c c c c
+c c c c c b c c c c c c c c c c
+c c c c c b c c c c c c c c c c
+c c c c c b c c c c c c c c c c
+c c c c c b b b b c c c c c c c
+c c c c c c c c b c c c c c c c
+c c c c c b b b b c c c c c c c
+c c c c c b c c c c c c c c c c
+c c c c c b b b c c c c c c c c
+c c c c c c c e c c c c c c c c
