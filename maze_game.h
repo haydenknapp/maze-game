@@ -43,11 +43,15 @@ enum GuiStatus { rendering, stop };
 typedef struct {
 	int flag;
 	pthread_t thread;
+	movements_t movement;
+	pthread_mutex_t lock;
 } Gui;
 
 void gui_init(Gui *, Board *);
 
 void gui_destroy(Gui *gui);
+
+int gui_movement(Gui *gui);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

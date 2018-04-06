@@ -8,12 +8,16 @@ typedef struct {
 	int *flag;
 	Board *board;
 	int pixel_width;
+	movements_t *movement;
+	pthread_mutex_t *lock;
 } gui_params;
 
 static void gui_begin_render(void *params) {
 	Board *board = ((gui_params *) params)->board;
 	int *flag = ((gui_params *) params)->flag;
 	int pixel_width = ((gui_params *) params)->pixel_width;
+	int *movement = ((gui_params*) params)->movement;
+	pthread_mutex_t *lock = ((gui_params*) params)->lock;
 
 	int window_width = pixel_width * board->width,
 	    window_height = pixel_width * board->height;
@@ -52,29 +56,38 @@ static void gui_begin_render(void *params) {
 					SDL_RenderFillRect(maze_renderer, &r);
 				}
 				while (SDL_PollEvent(&event)) {
-					switch (event.type) {
-						case SDL_KEYDOWN:
-							printf("Key down\n");
-							break;
-						case SDL_KEYUP:
-							printf("Key up\n");
-							break;
-						default:
-							break;
+					pthread_mutex_lock(lock);
+					if (event.type == SDL_KEYDOWN) {
+						switch (event.key.keysym.sym) {
+								case SDLK_UP:
+								*movement = up;
+								break;
+							case SDLK_DOWN:
+								*movement = down;
+								break;
+							case SDLK_LEFT:
+								*movement = left;
+								break;
+							case SDLK_RIGHT:
+								*movement = right;
+								break;
+							default:
+								break;
+						}
 					}
-
+					pthread_mutex_unlock(lock);
 				}
 
 			}
 		}
-		r.x = player_x(board->player);
-		r.y = player_y(board->player);
+		r.x = player_x(board->player) * pixel_width;
+		r.y = player_y(board->player) * pixel_width;
 		SDL_SetRenderDrawColor(maze_renderer, 128, 128, 128, 255);
 		SDL_RenderFillRect(maze_renderer, &r);
 		SDL_RenderPresent(maze_renderer);
 	}
 
-	SDL_Delay(100);
+	SDL_Delay(10);
 
 	SDL_DestroyRenderer(maze_renderer);
 	SDL_DestroyWindow(maze_window);
@@ -83,18 +96,26 @@ static void gui_begin_render(void *params) {
 
 void gui_init(Gui *gui, Board *board) {
 	gui->flag = rendering;
-
 	gui_params params;
-	gui->flag;
 	params.board = board;
 	params.flag = &gui->flag;
 	params.pixel_width = 32;
+	params.movement = &gui->movement;
+	params.lock = &gui->lock;
 
 	pthread_create(&gui->thread, NULL, (void *(*)(void *)) gui_begin_render, (void *) &params);
-	SDL_Delay(100);
+	SDL_Delay(10);
 }
 
 void gui_destroy(Gui *gui) {
 	gui->flag = stop;
 	pthread_join(gui->thread, NULL);
+}
+
+movements_t gui_movement(Gui *gui) {
+	movements_t ret = gui->movement;
+	pthread_mutex_lock(&gui->lock);
+	gui->movement = -1;
+	pthread_mutex_unlock(&gui->lock);
+	return ret;
 }

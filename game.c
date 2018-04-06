@@ -18,7 +18,9 @@ void game_destroy(Game *game) {
 }
 
 void game_play(Game *game) {
+	movements_t movement;
 	while (!board_player_win(game->board)) {
-
+		movement = gui_movement(game->gui);
+		board_check_move_player(game->board, movement);
 	}
 }
