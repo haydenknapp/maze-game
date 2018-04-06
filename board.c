@@ -34,6 +34,7 @@ void board_init(Board *board, char *map_file_name) {
 	while (board->tiles[++start_pos] != start);
 	player_y(board->player) = start_pos / board->width;
 	player_x(board->player) = start_pos % board->width;
+
 }
 
 void board_destroy(Board *board) {

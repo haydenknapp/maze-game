@@ -11,6 +11,7 @@ void game_init(Game *game, char *map_file_name) {
 }
 
 void game_destroy(Game *game) {
+	gui_destroy(game->gui);
 	free(game->gui);
 	board_destroy(game->board);
 	free(game->board);

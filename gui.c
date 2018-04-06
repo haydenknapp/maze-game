@@ -24,10 +24,10 @@ static void gui_begin_render(void *params) {
 	while (*flag == rendering) {
 		SDL_SetRenderDrawColor(maze_renderer, 255, 255, 255, 255 );
 		SDL_RenderClear(maze_renderer);
-
+		SDL_Event event;
+		SDL_Rect r;
 		for (int y = 0; y < board->height; ++y) {
 			for (int x = 0; x < board->width; ++x) {
-				SDL_Rect r;
 				r.x = x * pixel_width;
 				r.y = y * pixel_width;
 				r.w = pixel_width;
@@ -51,11 +51,30 @@ static void gui_begin_render(void *params) {
 					SDL_SetRenderDrawColor(maze_renderer, 128, 255, 128, 255);
 					SDL_RenderFillRect(maze_renderer, &r);
 				}
+				while (SDL_PollEvent(&event)) {
+					switch (event.type) {
+						case SDL_KEYDOWN:
+							printf("Key down\n");
+							break;
+						case SDL_KEYUP:
+							printf("Key up\n");
+							break;
+						default:
+							break;
+					}
+
+				}
+
 			}
 		}
+		r.x = player_x(board->player);
+		r.y = player_y(board->player);
+		SDL_SetRenderDrawColor(maze_renderer, 128, 128, 128, 255);
+		SDL_RenderFillRect(maze_renderer, &r);
 		SDL_RenderPresent(maze_renderer);
 	}
 
+	SDL_Delay(100);
 
 	SDL_DestroyRenderer(maze_renderer);
 	SDL_DestroyWindow(maze_window);
@@ -71,10 +90,11 @@ void gui_init(Gui *gui, Board *board) {
 	params.flag = &gui->flag;
 	params.pixel_width = 32;
 
-	pthread_t gui_thread;
-	pthread_create(&gui_thread, NULL, (void *(*)(void *)) gui_begin_render, (void *) &params);
-	SDL_Delay(4000);
-	gui->flag = stop;
+	pthread_create(&gui->thread, NULL, (void *(*)(void *)) gui_begin_render, (void *) &params);
+	SDL_Delay(100);
+}
 
-	pthread_join(gui_thread, NULL);
+void gui_destroy(Gui *gui) {
+	gui->flag = stop;
+	pthread_join(gui->thread, NULL);
 }

@@ -1,6 +1,7 @@
 #ifndef MAZE_GAME_
 #define MAZE_GAME_
 
+#include <pthread.h>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -41,6 +42,7 @@ void board_check_move_player(Board *, movements_t);
 enum GuiStatus { rendering, stop };
 typedef struct {
 	int flag;
+	pthread_t thread;
 } Gui;
 
 void gui_init(Gui *, Board *);

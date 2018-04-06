@@ -18,6 +18,7 @@ int main() {
 
 	game_init(&game, "map1.txt");
 
+
 	assert(game.board->width == 16);
 	assert(game.board->height == 12);
 
@@ -35,6 +36,7 @@ int main() {
 	// player movement tests
 	player_x(game.board->player) = 1;
 	player_y(game.board->player) = 0;
+
 
 	board_check_move_player(game.board, up);
 	assert(player_x(player) == 1);
