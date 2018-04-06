@@ -4,12 +4,14 @@
 #include "maze_game.h"
 
 void game_init(Game *game, char *map_file_name) {
-	srand(time(NULL));
 	game->board = malloc(sizeof(Board));
 	board_init(game->board, map_file_name);
+	game->gui = malloc(sizeof(Gui));
+	gui_init(game->gui, game->board);
 }
 
 void game_destroy(Game *game) {
+	free(game->gui);
 	board_destroy(game->board);
 	free(game->board);
 }

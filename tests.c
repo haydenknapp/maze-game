@@ -95,6 +95,7 @@ int main() {
 
 	game_destroy(&game);
 
+#ifdef SECOND_TEST
 	// second maze_game tests
 	game_init(&game, "map2.txt");
 
@@ -111,4 +112,5 @@ int main() {
 	assert(board_player_win(game.board));
 
 	game_destroy(&game);
+#endif
 }
