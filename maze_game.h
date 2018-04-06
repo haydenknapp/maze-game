@@ -21,6 +21,7 @@ typedef struct {
 enum TileTypes { player = 'a', path, wall, start, end };
 typedef int tile_t;
 
+// up means in the negative y direction
 enum TileMovements { up, right, down, left };
 typedef int movements_t;
 

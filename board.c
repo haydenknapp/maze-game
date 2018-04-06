@@ -41,4 +41,44 @@ void board_destroy(Board *board) {
 	free(board->tiles);
 }
 
+void board_check_move_player(Board *board, movements_t movement) {
+	Player *player = board->player;
+
+	int new_x = player_x(player), new_y = player_y(player);
+
+	if (movement == up) {
+		--new_y;
+		tile_t tile_moved_to = board_get_tile(board, new_x, new_y);
+		assert(new_y * board->width + new_x < board->height  * board->width);
+		if ( new_y >= 0 && (tile_moved_to == path || tile_moved_to == end)) {
+			player_y(player) = new_y;
+		}
+	}
+	else if (movement == down) {
+		++new_y;
+		tile_t tile_moved_to = board_get_tile(board, new_x, new_y);
+		assert(new_y * board->width + new_x < board->height  * board->width);
+		if ( new_y < board->height && (tile_moved_to == path || tile_moved_to == end)) {
+			player_y(player) = new_y;
+		}
+	}
+	else if (movement == right) {
+		++new_x;
+		tile_t tile_moved_to = board_get_tile(board, new_x, new_y);
+		assert(new_y * board->width + new_x < board->height  * board->width);
+		if ( new_x >= 0 && (tile_moved_to == path || tile_moved_to == end)) {
+			player_x(player) = new_x;
+		}
+	}
+	else if (movement == left) {
+		--new_x;
+		tile_t tile_moved_to = board_get_tile(board, new_x, new_y);
+		assert(new_y * board->width + new_x < board->height  * board->width);
+		if (new_x < board->height && (tile_moved_to == path || tile_moved_to == end)) {
+			player_x(player) = new_x;
+		}
+	}
+}
+	
+
 
